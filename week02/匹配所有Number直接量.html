@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script>
-    
+    // number有哪些直接量
+
+    // 整数
+    const reOne = /^-?\\d+$/
+
+    // 浮点数
+    const reTwo = /^(-?\\d+)(\\.\\d+)?$/
+
+    // 二进制数
+    const reThree = /^[01]+$/
+
+    // 八进制数
+    const reFour = /^[0-7]+$/
+
+    // 十六进制数
+    const reFive = /(^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$)/
+
+    // 集合上面
+    const reSix = /(^-?\\d+$)|(^(-?\\d+)(\\.\\d+)?$)|(^[01]+$)|(^[0-7]+$)|((^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$))/
   </script>
 </head>
 <body>
