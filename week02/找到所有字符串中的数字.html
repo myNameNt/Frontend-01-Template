@@ -48,6 +48,13 @@
       return str.mach()
     }
     console.log(reOne.test(str))
+
+    
+    function getNumber(str) {
+      let numRe = /\d/
+      return numRe.test(str)
+    }
+    console.log(getNumber(Infinity), 'getNumber')
   </script>
 </head>
 
