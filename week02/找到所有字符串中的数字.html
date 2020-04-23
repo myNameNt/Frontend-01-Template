@@ -6,55 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script>
-    // \s 空格
-    // \S 非空格
-
-    // \d 数字
-    // \D 非数字
-
-    // \w 字符 （非字符包括 字母 数字 和下划线 _  ）
-    // \W 非字符
-
-
-
-
-    let str = 'fssdhdfhd7sd8926fhdfgsd788fgjsajkl1sjflsd5456kajfisago45isdfo'
-    let res = []
-    let temp = ''
-    // for (let i = 0; i < str.length; i++) {
-    //   if (Number(str[i])) {
-    //     temp += str[i]
-    //   } else {
-    //     if (temp) {
-    //       res.push(Number(temp))
-    //       temp = ''
-    //     }
-
-    //   }
-    // }
-    // for (let i = 0; i < str.length; i++) {
-    //   if ('0' <= str[i] && str[i]<='9') {
-    //     temp += str[i]
-    //   } else {
-    //     if (temp) {
-    //       res.push(Number(temp))
-    //       temp = ''
-    //     }
-    //   }
-    // }
-      let re = new RegExp()
-      let reOne = /\W/g
-    function findNum (str){
-      return str.mach()
-    }
-    console.log(reOne.test(str))
-
+    // String所有直接量
     
-    function getNumber(str) {
-      let numRe = /\d/
-      return numRe.test(str)
-    }
-    console.log(getNumber(Infinity), 'getNumber')
+    // Unicode
+    const unicodeRe = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\u0021-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E])/
+
+    // ASCII
+    const asciiRe = /^(?=.*[a-zA-Z])(?=.*\d)/
+
+    // 单双引号
+    const re = /(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*/
+
+    // 集合上面
+    const allRe = /(^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\u0021-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]))|(^(?=.*[a-zA-Z])(?=.*\d))|(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*/
   </script>
 </head>
 
