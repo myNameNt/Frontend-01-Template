@@ -25,3 +25,49 @@
       example
         new a()['b']
 # 第二节课总结
+# Statement 语句
+
+## Completion Record
+
+- [[type]] : normal, break, continue, return throw
+- [[value]] : Types
+- [[target]]: label
+
+## 简单语句
+
+- ExpressionStatement 表达式语句
+- EmptyStatement 空语句
+- DebuggerStatement
+- ThrowStatement
+- ContinueStatement
+- BreakStatement
+- ReturnStatement
+
+## 复合语句
+
+- BlockStatement
+- IfStatement
+- SwitchStatement
+- IterationStatement
+- WithStatement
+- LabelledStatement
+- TryStatement
+
+## Declaration 声明语句
+
+- FunctionDeclaration
+- GeneratorDeclaration
+- AsyncFunctionDeclaration
+- AsyncGeneratorDeclaration
+- VariableStatement
+- ClassDeclaration
+- LexicalDeclaration
+
+# Object
+
+- 唯一
+- 状态
+- 行为
+
+# Class
+- 对对象进行分类
