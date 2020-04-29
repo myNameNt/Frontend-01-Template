@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StringToNumber</title>
+  <script>
+    function convertStringToNumber(str, x = 10) { // str 是传入的数字字符串 x 表示要转换成哪种进制的数
+      if (typeof str !== 'string') {return ''}
+      let initStr = str.split('');
+      let charts = []
+      for (let j = 0;j<initStr.length; j++) {
+        if ( (initStr[j].codePointAt(0) >= '0'.codePointAt(0) && initStr[j].codePointAt(0) <= '9'.codePointAt(0)) ||  initStr[j] === '.') {
+          charts.push(initStr[j])
+        } else {
+          break;
+        }
+      }
+
+      let number = 0
+      let i = 0
+      while (i < charts.length && charts[i] !== '.') {
+        number = number * 10
+        number += charts[i].codePointAt(0) - '0'.codePointAt(0)
+        i++
+      }
+      if (charts[i] === '.') {
+        i++
+      }
+      let fraction = 0;
+      let multiple = 1
+      while (i < charts.length) {
+        multiple = multiple * x
+        fraction += (charts[i].codePointAt(0) - '0'.codePointAt(0)) / multiple
+        i++
+      }
+      return number+fraction
+    }
+    console.log(convertStringToNumber('sds1212.0560reds012'))
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

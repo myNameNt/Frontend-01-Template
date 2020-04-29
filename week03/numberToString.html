@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function convertNumberToString(num, x = 10) {
+      let integer = Math.floor(num)
+      let fraction = num - integer
+      let string = ''
+      while (integer > 0) {
+        string = String(integer % x) + string
+        integer = Math.floor(integer/x)
+
+      }
+      return string
+    }
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
