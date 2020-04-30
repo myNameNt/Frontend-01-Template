@@ -75,7 +75,9 @@
 >> js中对象的属性和原型是要区分理解的，每一个对象都一个原型，但是属性可以任意增删  
 >> js对象有两种 property
 >>> - Data property: [[value]], writeable, enumerable, configurable
->>> - accessor property: get, set, enumerable, configurable
-
-# Class
-- 对对象进行分类
+>>> - accessor property: get, set, enumerable, configurable  
+>> ## API  
+>> - {}, [] Object.defineProperty
+>> - Object.create() / Object.setPrototypeOf / Object.getPrototypeOf
+>> - new / class / extends
+>> - new / function / prototype (已经过时，不好用)
