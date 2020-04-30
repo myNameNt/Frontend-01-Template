@@ -72,7 +72,10 @@
   >> - 用状态来描述对象，改变自身状态的就称为行为
 > 在设计对象的状态和行为时我们要遵循的是“行为改变状态”的原则（比如狗咬人这个行为 就是改变的人的状态，所以在设计这个行为的时候我们是要去设计 人受伤的行为 而不是 狗咬人的行为）
 >> ## JavaScript中的对象
->> - js中对象的属性和原型是要区分理解的，每一个对象都一个原型，但是属性可以任意增删
+>> js中对象的属性和原型是要区分理解的，每一个对象都一个原型，但是属性可以任意增删  
+>> js对象有两种 property
+>>> - Data property: [[value]], writeable, enumerable, configurable
+>>> - accessor property: get, set, enumerable, configurable
 
 # Class
 - 对对象进行分类
