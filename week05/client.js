@@ -1,5 +1,5 @@
 const net = require('net')
-
+const parser = require('./parser')
 class Request {
   // method url = host + port + path
   // body = k/v
@@ -145,8 +145,8 @@ class TrunkedBodyParser {
         }
         this.current = this.WAITING_LENGTH_LINE_END
       } else {
-        this.length *= 10
-        this.length += char.charCodeAt(0) - '0'.charCodeAt(0)
+        this.length *= 16
+        this.length += parseInt(char,16)
       }
     } else if (this.current === this.WAITING_LENGTH_LINE_END) {
       if (char === '\n') {
@@ -183,6 +183,7 @@ let client = net.createConnection({ port: 8888, host: '127.0.0.1' }, () => {
     })
     let response = await request.send(client)
     console.log(response)
+    let dom = parser.parseHTML(response.body)
   }()
 
 })
