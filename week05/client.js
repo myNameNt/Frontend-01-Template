@@ -48,8 +48,8 @@ class Request {
 
       connection.on('data', (data) => {
         parser.receive(data.toString())
-        // resolve(data.toString())
-        console.log(parser.headers, 'statusLine')
+        resolve(parser.bodyParser.content)
+        // console.log(parser.headers, 'statusLine')
         connection.end()
       })
       connection.on('error', (error) => {
@@ -78,6 +78,7 @@ class ResponseParser {
     this.headers = {}
     this.headerName = ''
     this.headerValue = ''
+    this.bodyParser = ''
   }
   receive (string) {
     for (let i = 0; i < string.length; i++) {
