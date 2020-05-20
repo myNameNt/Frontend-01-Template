@@ -1,5 +1,5 @@
 const net = require('net')
-const parser = require('./parser')
+
 class Request {
   // method url = host + port + path
   // body = k/v
@@ -48,12 +48,16 @@ class Request {
 
       connection.on('data', (data) => {
         parser.receive(data.toString())
-        resolve(parser.bodyParser.content)
+        // resolve(parser.bodyParser.content)
         // console.log(parser.headers, 'statusLine')
+        if (parser.isFinished) {
+          resolve(parser.response)
+        }
         connection.end()
       })
       connection.on('error', (error) => {
         reject(error)
+        connection.end()
       })
 
     })
@@ -80,6 +84,18 @@ class ResponseParser {
     this.headerValue = ''
     this.bodyParser = ''
   }
+  get isFinished () {
+    return this.bodyParser && this.bodyParser.isFinished
+  }
+  get response () {
+    this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+    return {
+      statusCode: RegExp.$1,
+      statusText: RegExp.$2,
+      headers: this.headers,
+      body: this.bodyParser.content.join('')
+    }
+  }
   receive (string) {
     for (let i = 0; i < string.length; i++) {
       this.receiveChar(string.charAt(i))
@@ -93,12 +109,17 @@ class ResponseParser {
         this.statusLine += char;
       }
     } else if (this.current === this.WAITING_STATUS_LINE_END) {
-      this.current = this.WAITING_HEADER_NAME;
+      if (char === '/n') {
+        this.current = this.WAITING_HEADER_NAME;
+      }
     } else if (this.current === this.WAITING_HEADER_NAME) {
-      if (char === '\r') {
-        this.current = this.WAITING_HEADER_BLOCK_END
-      } else if (char === ':') {
+      if (char === ':') {
         this.current = this.WAITING_HEADER_SPACE;
+      } else if (char === '\r') {
+        this.current = this.WAITING_HEADER_BLOCK_END
+        if (this.headers['Transfer-Encoding'] === 'chunked') {
+          this.bodyParser = new TrunkedBodyParser()
+        }
       } else {
         this.headerName += char;
       }
@@ -117,9 +138,9 @@ class ResponseParser {
       this.current = this.WAITING_HEADER_NAME
     } else if (this.current === this.WAITING_HEADER_BLOCK_END) {
       this.current = this.WAITING_BODY
-      if (this.headers['Transfer-Encoding'] === 'chunked') {
-        this.bodyParser = new TrunkedBodyParser()
-      }
+      // if (this.headers['Transfer-Encoding'] === 'chunked') {
+      //   this.bodyParser = new TrunkedBodyParser()
+      // }
     } else if (this.current === this.WAITING_BODY) {
       this.bodyParser.receiveChar(char)
     }
@@ -138,7 +159,7 @@ class TrunkedBodyParser {
     this.isFinished = false
     this.current = this.WAITING_LENGTH
   }
-  receiveChar(char) {
+  receiveChar (char) {
     if (this.current === this.WAITING_LENGTH) {
       if (char === '\r') {
         if (this.length === 0) {
@@ -174,17 +195,19 @@ let client = net.createConnection({ port: 8888, host: '127.0.0.1' }, () => {
 
   void async function () {
     let request = new Request({
-      method: 'GET',
+      method: 'POST',
       host: '127.0.0.1',
-      port: '8888',
+      port: '8088',
       path: '/',
+      headers: {
+        ['X-Foo2']: 'ha'
+      },
       body: {
-        name: 'ha'
+        name: 'nt'
       }
     })
     let response = await request.send(client)
-    console.log(response)
-    let dom = parser.parseHTML(response.body)
+    let dom = parser.parseHTML(response.bodyParser)
   }()
 
 })
