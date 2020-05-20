@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function findA (str) {
+            if (typeof str !== 'string'){
+                return
+            }
+            const searchStr = 'a'
+            let indexArr = []
+            let isEnd = true
+            let nowIndex = 0
+            while (isEnd) {
+                let itemIndex = str.indexOf(searchStr,nowIndex+1)
+                if (itemIndex !== -1) {
+                    indexArr.push(itemIndex)
+                    nowIndex = itemIndex
+                    isEnd = true
+                } else {
+                    isEnd = false
+                }
+            }
+            return indexArr
+        }
+       console.log(findA('dsdasgdafgfdagdafg'))
+
+       function FindLetter(str) {
+           
+       }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
