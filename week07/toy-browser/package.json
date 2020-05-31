@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "css": "^2.2.4",
+    "images": "^3.0.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "toy-borwer",
+  "version": "1.0.0",
+  "main": "client.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
