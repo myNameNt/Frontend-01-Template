@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #box {
+        margin: 100px auto;
+        width: 300px;
+      }
+      #box .item-wrap {
+        width: 300px;
+        display: flex;
+        justify-content: start;
+      }
+      #box .item {
+        width: 33.33333%;
+        height: 100px;
+        background-color: green;
+        border: 1px solid #fff;
+        box-sizing: border-box;
+        text-align: center;
+        line-height: 100px;
+        font-size: 50px;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+    var pattern = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+    var people = 1
+    
+    function move(x, y) {
+      let value = pattern[y][x]
+      if (value === 0) {
+        
+        if (people === 1) {
+            pattern[y][x] = 1
+            people = 2
+        } else if (people === 2) {
+            pattern[y][x] = 2
+            people = 1
+        }
+      } else {
+          return
+      }
+      show(pattern);
+    }
+    function show(pattern) {
+        var oBox = document.getElementById('box');
+        oBox.innerHTML = ''
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < pattern.length; i++) {
+        const itemArry = pattern[i];
+        let oWrap = document.createElement('div');
+        oWrap.setAttribute('class', 'item-wrap');
+        for (let j = 0; j < itemArry.length; j++) {
+          const oItem = document.createElement('div');
+          oItem.setAttribute('class', 'item');
+          switch (itemArry[j]) {
+            case 0:
+              oItem.innerHTML = '';
+              break;
+            case 1:
+              oItem.innerHTML = 'x';
+              break;
+            case 2:
+              oItem.innerHTML = 'o';
+              break;
+          }
+          oItem.addEventListener('click',()=>{
+            move(j, i)
+          });
+          oWrap.appendChild(oItem);
+        }
+        fragment.appendChild(oWrap);
+      }
+      oBox.appendChild(fragment);
+    }
+
+    show(pattern);
+  </script>
+</html>
