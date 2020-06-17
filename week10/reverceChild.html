@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="box">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+  </div>
+  <div id="wrap">我想看看<span style="color: red;">一半的节点</span>长什么样子</div>
+  <div id="clone-wrap">---<span>+++++</span></div>
+</body>
+<script>
+  const cloneWrap = document.getElementById('clone-wrap')
+  const wrap = document.getElementById('wrap')
+  const op = document.getElementsByTagName('p')[0]
+  const range = new Range()
+  range.setStart(wrap.childNodes[0],1)
+  range.setEnd(wrap.childNodes[1].childNodes[0],2)
+  const fragment = range.extractContents()
+  cloneWrap.insertBefore(fragment,cloneWrap.childNodes[1])
+
+  setTimeout(() => {
+    // 第一种
+    // const box = document.getElementById('box')
+    // const children = box.children 
+    // const range = new Range()
+    // range.setStart(box, 0)
+    // range.setEnd(box, box.childNodes.length)
+    // const fragment = range.extractContents()
+    // for (let i = fragment.children.length - 1; i >= 0; i--) {
+    //   fragment.appendChild(fragment.children[i])
+    // }
+    // box.appendChild(fragment)
+
+    // 第二种
+    const box = document.getElementById('box')
+    const children = box.children
+    const range = new Range()
+    range.selectNodeContents(box)
+    const fragment = range.extractContents()
+    for (let i = fragment.children.length - 1; i >= 0; i--) {
+      fragment.appendChild(fragment.children[i])
+    }
+    box.appendChild(fragment)
+  }, 2000)
+</script>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Document</title>
+  <style>
+    .a{
+      height: 500px;
+      background-color: cadetblue;
+    }
+    .b{
+      height: 300px;
+      background-color: saddlebrown;
+    }
+  </style>
+</head>
+<body>
+  <div class="a">
+    <div class="b" ></div>
+  </div>
+</body>
+<script>
+  const a = document.getElementsByClassName('a')[0]
+  const b = document.getElementsByClassName('b')[0]
+
+  a.addEventListener('click', ()=>{console.log('a')})
+  b.addEventListener('click', ()=>{console.log('b')})
+
+  // a.addEventListener('click', ()=>{console.log('a')}, true)
+  // b.addEventListener('click', ()=>{console.log('b')}, true)
+</script>
+</html>
