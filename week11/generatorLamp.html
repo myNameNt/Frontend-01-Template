@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .lamp {
+      width: 100px;
+      height: 100px;
+      float: left;
+      overflow: hidden;
+      margin-left: 30px;
+      border-radius: 50%;
+      background-color: #eee;
+      border: 1px solid #eee;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    .light.yellow {
+      background-color: yellow;
+    }
+
+    .light.red {
+      background-color: red;
+    }
+
+    .light.green {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="lamp red"></div>
+  <div class="lamp yellow"></div>
+  <div class="lamp green"></div>
+  <input type="button" id="next" value="next" />
+</body>
+<script>
+  function transformLamp(index) {
+    const lights = document.getElementsByClassName('lamp')
+    for (let i = 0; i < lights.length; i++) {
+      lights[i].classList.remove('light')
+    }
+    lights[index].classList.add('light')
+  }
+
+  function sleep(time) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, time)
+    })
+  }
+  function happen(element, eventName) {
+    return new Promise((resolve, reject) => {
+      element.addEventListener(eventName, resolve, { once: true })
+    })
+  }
+  function* go() {
+    while (true) {
+      transformLamp(0)
+      yield sleep(1000)
+      transformLamp(1)
+      yield sleep(2000)
+      transformLamp(2)
+      yield sleep(3000)
+    }
+  }
+  function run(iterator) {
+    let { value, done } = iterator.next()
+    if (done) {
+      return
+    }
+    if (value instanceof Promise) {
+      value.then(() => {
+        run(iterator)
+      })
+    }
+  }
+  function co(generator) {
+    return function () {
+      run(generator())
+    }
+  }
+  const start = co(go)
+</script>
+
+</html>

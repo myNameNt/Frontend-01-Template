@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .lamp {
+      width: 100px;
+      height: 100px;
+      float: left;
+      overflow: hidden;
+      margin-left: 30px;
+      border-radius: 50%;
+      background-color: #eee;
+      border: 1px solid #eee;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    }
+    .light.yellow {
+      background-color: yellow;
+    }
+    .light.red {
+      background-color: red;
+    }
+    .light.green {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="lamp red"></div>
+  <div class="lamp yellow"></div>
+  <div class="lamp green"></div>
+</body>
+<script>
+  const aLamp = document.getElementsByClassName('lamp')
+  class Lamp {
+    constructor(aLamp) {
+      this.aLamp = aLamp
+    }
+    init() {
+      this.transform()
+    }
+    sleep(time) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, time)
+      })
+    }
+    setLampColor(color, itemIndex) {
+      for (let i = 0;i<this.aLamp.length;i++) {
+        this.aLamp[i].classList.remove('light')
+      }
+      this.aLamp[itemIndex].classList.add('light')
+    }
+    async transform() {
+      while (true) {
+        this.setLampColor('red', 0)
+        await this.sleep(5000)
+        this.setLampColor('yellow', 1)
+        await this.sleep(2000)
+        this.setLampColor('green', 2)
+        await this.sleep(3000)
+      }
+    }
+  }
+  const lamp = new Lamp(aLamp)
+  lamp.init()
+</script>
+
+</html>

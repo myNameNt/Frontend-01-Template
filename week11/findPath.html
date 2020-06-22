@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+
+    #box {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      flex-direction: row;
+      width: 800px;
+      margin: 100px auto;
+    }
+
+    .item {
+      width: 6px;
+      height: 6px;
+      border: 1px solid #fff;
+      background-color: #ddd;
+      font-size: 1px;
+    }
+
+    .roadblock {
+      background-color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="box">
+  </div>
+  <input id="save" type="button" value="save" />
+</body>
+<script>
+  const box = document.getElementById('box')
+  const save = document.getElementById('save')
+  let boxMouseDown = false
+  let clear = false
+  let historyArr = localStorage.getItem('array') || null
+  let array = historyArr ? historyArr.split(',') : new Array(10000).fill(0)
+  const fragment = document.createDocumentFragment()
+
+  for (let y = 0; y < 100; y++) {
+    for (let x = 0; x < 100; x++) {
+      const item = document.createElement('div')
+      if (Number(array[y*100+x]) === 1) {
+        item.classList.add('item', 'roadblock')
+      } else {
+        item.classList.add('item')
+      }
+      item.addEventListener('mousemove', mouseMove.bind(window, y,x, item))
+      fragment.appendChild(item)
+    }
+  }
+  function mouseMove(y,x, item) {
+    if (boxMouseDown) {
+      if (clear) {
+        item.classList.remove('roadblock')
+        array[y*100+x] = 0
+      } else {
+        item.classList.add('roadblock')
+        array[y*100+x] = 1
+      }
+    }
+  }
+  box.appendChild(fragment)
+  document.addEventListener('mousedown', (e) => {
+    boxMouseDown = true
+    clear = e.which === 3
+  })
+  document.addEventListener('mousemove', (e) => { e.preventDefault() })
+  document.addEventListener('contextmenu', (e) => { e.preventDefault() })
+  document.addEventListener('mouseup', () => { boxMouseDown = false; clear = false })
+  save.addEventListener('click', function () {
+    console.log(array)
+    localStorage.setItem('array', array.join(','))
+  })
+</script>
+
+</html>
