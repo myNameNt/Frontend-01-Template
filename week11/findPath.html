@@ -33,6 +33,17 @@
     .roadblock {
       background-color: #333;
     }
+
+    .green {
+      background-color: lightgreen;
+    }
+
+    .pink {
+      background-color: lightpink;
+    }
+    .red{
+      background-color: red;
+    }
   </style>
 </head>
 
@@ -44,47 +55,175 @@
 <script>
   const box = document.getElementById('box')
   const save = document.getElementById('save')
-  let boxMouseDown = false
-  let clear = false
-  let historyArr = localStorage.getItem('array') || null
-  let array = historyArr ? historyArr.split(',') : new Array(10000).fill(0)
-  const fragment = document.createDocumentFragment()
+  class FindPath {
+    constructor(dom, saveDom) {
+      let historyArr = localStorage.getItem('array') || null
+      this.dom = dom
+      this.saveDom = saveDom
+      if (!dom || !saveDom) {
+        throw ('必须传box和save')
+      }
+      this.boxMouseDown = false
+      this.clear = false
+      if (historyArr) {
+        this.array = historyArr.split(',').map((item)=> Number(item))
+      } else {
+        this.array = new Array(10000).fill(0)
+      }
+    }
+    init() {
+      this.createCheckerboard()
+      this.save()
+      document.addEventListener('mousedown', (e) => {
+        this.boxMouseDown = true
+        this.clear = e.which === 3
+      })
+      document.addEventListener('mousemove', (e) => { e.preventDefault() })
+      document.addEventListener('contextmenu', (e) => { e.preventDefault() })
+      document.addEventListener('mouseup', () => {
+        this.boxMouseDown = false;
+        this.clear = false
+      })
+    }
+    createCheckerboard() {
+      const fragment = document.createDocumentFragment()
+      const _this = this
+      for (let y = 0; y < 100; y++) {
+        for (let x = 0; x < 100; x++) {
+          const item = document.createElement('div')
+          if (Number(this.array[y * 100 + x]) === 1) {
+            item.classList.add('item', 'roadblock')
+          } else {
+            item.classList.add('item')
+          }
+          item.addEventListener('mousemove', this.mouseMove.bind(_this, y, x, item))
+          fragment.appendChild(item)
+        }
+      }
+      this.dom.appendChild(fragment)
+    }
+    mouseMove(y, x, item) {
+      if (this.boxMouseDown) {
+        if (this.clear) {
+          item.classList.remove('roadblock')
+          this.array[y * 100 + x] = 0
+        } else {
+          item.classList.add('roadblock')
+          this.array[y * 100 + x] = 1
+        }
+      }
+    }
+    save() {
+      this.saveDom.addEventListener('click', () => {
+        localStorage.setItem('array', this.array.join(','))
+      })
+    }
+    sleep(time) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, time)
+      })
+    }
+    async findPath(end) {
+      let map = this.array.slice()
+      this.dom.children[100 * end[1] + end[0]].classList.add('red')
+      const start = [0, 0]
+      let queue = [start]
+      let insert = async ([x, y], pre) => {
+        if (x < 0 || y < 0 || x >= 100 || y >= 100) {
+          return
+        }
+        const index= 100 * y + x
+        if (Number(map[index]) !== 0) {
+          return
+        }
+        map[100 * y + x] = pre
+        this.dom.children[100 * y + x].classList.add('green')
+        await this.sleep(1)
+        queue.push([x, y])
+      }
+      while (queue.length) {
+        let [x, y] = queue.shift()
+        if (end[0] === x && end[1] === y) {
+          let path = []
+          while (x !== start[0] || y !== start[1]) {
+            path.push([x, y])
+            this.dom.children[y * 100 + x].style.backgroundColor = 'pink'
+            this.sleep(30)
+            x = map[y * 100 + x][0]
+            y = map[y * 100 + x][1]
+          }
+          return path
+        }
+        await insert([x + 1, y], [x, y])
+        await insert([x - 1, y], [x, y])
+        await insert([x, y + 1], [x, y])
+        await insert([x, y - 1], [x, y])
+        const index = 100 * y + x
+        if (map[index + 1] !== 1 && map[index + 100] !== 1) {
+          await insert([x + 1, y + 1], [x, y])
+        }
 
-  for (let y = 0; y < 100; y++) {
-    for (let x = 0; x < 100; x++) {
-      const item = document.createElement('div')
-      if (Number(array[y*100+x]) === 1) {
-        item.classList.add('item', 'roadblock')
-      } else {
-        item.classList.add('item')
+        if (map[index - 100] !== 1 && map[index - 1] !== 1) {
+          await insert([x - 1, y - 1], [x, y])
+        }
+
+        if (map[index - 1] !== 1 && map[index + 100] !== 1) {
+          await insert([x - 1, y + 1], [x, y])
+        }
+        if (map[index + 1] !== 1 && map[index -100] !== 1) {
+          await insert([x + 1, y - 1], [x, y])
+        }
+        
       }
-      item.addEventListener('mousemove', mouseMove.bind(window, y,x, item))
-      fragment.appendChild(item)
+      return null
     }
   }
-  function mouseMove(y,x, item) {
-    if (boxMouseDown) {
-      if (clear) {
-        item.classList.remove('roadblock')
-        array[y*100+x] = 0
-      } else {
-        item.classList.add('roadblock')
-        array[y*100+x] = 1
-      }
-    }
-  }
-  box.appendChild(fragment)
-  document.addEventListener('mousedown', (e) => {
-    boxMouseDown = true
-    clear = e.which === 3
-  })
-  document.addEventListener('mousemove', (e) => { e.preventDefault() })
-  document.addEventListener('contextmenu', (e) => { e.preventDefault() })
-  document.addEventListener('mouseup', () => { boxMouseDown = false; clear = false })
-  save.addEventListener('click', function () {
-    console.log(array)
-    localStorage.setItem('array', array.join(','))
-  })
+
+
+  const findPath = new FindPath(box, save)
+  findPath.init()
+  // findPath.findPath([50, 50])
+   // let boxMouseDown = false
+  // let clear = false
+  // let historyArr = localStorage.getItem('array') || null
+  // let array = historyArr ? historyArr.split(',') : new Array(10000).fill(0)
+  // const fragment = document.createDocumentFragment()
+
+  // for (let y = 0; y < 100; y++) {
+  //   for (let x = 0; x < 100; x++) {
+  //     const item = document.createElement('div')
+  //     if (Number(array[y * 100 + x]) === 1) {
+  //       item.classList.add('item', 'roadblock')
+  //     } else {
+  //       item.classList.add('item')
+  //     }
+  //     item.addEventListener('mousemove', mouseMove.bind(window, y, x, item))
+  //     fragment.appendChild(item)
+  //   }
+  // }
+  // box.appendChild(fragment)
+  // function mouseMove(y, x, item) {
+  //   if (boxMouseDown) {
+  //     if (clear) {
+  //       item.classList.remove('roadblock')
+  //       array[y * 100 + x] = 0
+  //     } else {
+  //       item.classList.add('roadblock')
+  //       array[y * 100 + x] = 1
+  //     }
+  //   }
+  // }
+
+  // document.addEventListener('mousedown', (e) => {
+  //   boxMouseDown = true
+  //   clear = e.which === 3
+  // })
+  // document.addEventListener('mousemove', (e) => { e.preventDefault() })
+  // document.addEventListener('contextmenu', (e) => { e.preventDefault() })
+  // document.addEventListener('mouseup', () => { boxMouseDown = false; clear = false })
+  // save.addEventListener('click', function () {
+  //   localStorage.setItem('array', array.join(','))
+  // })
 </script>
 
 </html>
