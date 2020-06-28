@@ -1,165 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #box {
+        margin: 100px auto;
+        width: 300px;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <style>
-    #box {
-      margin: 100px auto;
-      width: 300px;
-    }
+      #box .item-wrap {
+        width: 300px;
+        display: flex;
+        justify-content: start;
+      }
 
-    #box .item-wrap {
-      width: 300px;
-      display: flex;
-      justify-content: start;
-    }
+      #box .item {
+        width: 33.33333%;
+        height: 100px;
+        background-color: green;
+        border: 1px solid #fff;
+        box-sizing: border-box;
+        text-align: center;
+        line-height: 100px;
+        font-size: 50px;
+        color: red;
+      }
+    </style>
+  </head>
 
-    #box .item {
-      width: 33.33333%;
-      height: 100px;
-      background-color: green;
-      border: 1px solid #fff;
-      box-sizing: border-box;
-      text-align: center;
-      line-height: 100px;
-      font-size: 50px;
-      color: red;
-    }
-  </style>
-</head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+    var pattern = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+    let color = 1;
+    function check(pattern, color) {
+      {
+        for (let i = 0; i < pattern.length; i++) {
+          let win = true;
+          for (let j = 0; j < pattern[i].length; j++) {
+            if (pattern[i][j] !== color) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return true;
+          }
+        }
+      }
 
-<body>
-  <div id="box"></div>
-</body>
-<script>
-  var pattern = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ];
-  let color = 1
-  function check(pattern, color) {
-    {
-      for (let i = 0; i < pattern.length; i++) {
-        let win = true
-        for (let j = 0; j < pattern[i].length; j++) {
-          if (pattern[i][j] !== color) {
-            win = false
-            break
+      {
+        for (let i = 0; i < pattern.length; i++) {
+          let win = true;
+          for (let j = 0; j < pattern[i].length; j++) {
+            if (pattern[j][i] !== color) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return true;
+          }
+        }
+      }
+
+      {
+        let win = true;
+        for (let i = 0; i < pattern.length; i++) {
+          if (pattern[i][i] !== color) {
+            win = false;
+            break;
           }
         }
         if (win) {
-          return true
+          return true;
         }
       }
-    }
 
-    {
-      for (let i = 0; i < pattern.length; i++) {
-        let win = true
-        for (let j = 0; j < pattern[i].length; j++) {
-          if (pattern[j][i] !== color) {
-            win = false
-            break
+      {
+        let win = true;
+        for (let i = 0; i < pattern.length; i++) {
+          if (pattern[i][pattern.length - 1 - i] !== color) {
+            win = false;
+            break;
           }
         }
         if (win) {
-          return true
+          return true;
         }
       }
+      return false;
+    }
+    function clone(data) {
+      return JSON.parse(JSON.stringify(data));
+    }
+    function willWin(pattern, color) {
+      for (let i = 0; i < 3; i++) {
+        for (let l = 0; l < 3; l++) {
+          if (pattern[i][l]) continue;
+          let tem = clone(pattern);
+          tem[i][l] = color;
+          if (check(tem, color)) {
+            return [i, l];
+          }
+        }
+      }
+      return null;
+    }
+    function move(x, y) {
+      if (pattern[y][x] !== 0) return;
+      pattern[y][x] = color;
+      show(pattern);
+
+      if (check(pattern, color)) {
+        alert(`玩家${color}：赢了`);
+      }
+      // if (willWin(pattern, color)) {
+      //   alert(`玩家${color}：快要赢了`);
+      // }
+      color = 3 - color;
+      computerMove()
+    }
+    function show(pattern) {
+      var oBox = document.getElementById('box');
+      oBox.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < pattern.length; i++) {
+        const itemArry = pattern[i];
+        let oWrap = document.createElement('div');
+        oWrap.setAttribute('class', 'item-wrap');
+        for (let j = 0; j < itemArry.length; j++) {
+          const oItem = document.createElement('div');
+          oItem.setAttribute('class', 'item');
+          switch (itemArry[j]) {
+            case 0:
+              oItem.innerHTML = '';
+              break;
+            case 1:
+              oItem.innerHTML = 'x';
+              break;
+            case 2:
+              oItem.innerHTML = 'o';
+              break;
+          }
+          oItem.addEventListener('click', () => {
+            move(j, i);
+          });
+          oWrap.appendChild(oItem);
+        }
+        fragment.appendChild(oWrap);
+      }
+      oBox.appendChild(fragment);
     }
 
-    {
-      let win = true
-      for (let i = 0; i < pattern.length; i++) {
-        if (pattern[i][i] !== color) {
-          win = false
-          break
-        }
+    function bestChoice(pattern, color) {
+      let point = willWin(pattern, color);
+      if (point) {
+        return {
+          point: point,
+          result: 1,
+        };
       }
-      if (win) {
-        return true
-      }
-    }
+      let result = -1;
+      outer:for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (pattern[i][j]) continue;
+          let tem = clone(pattern);
+          tem[i][j] = color;
+          let opp = bestChoice(tem, 3 - color);
+          if (-opp.result >= result) {
+            point = [i, j];
+            result = -opp.result;
+          }
 
-    {
-      let win = true
-      for (let i = 0; i < pattern.length; i++) {
-        if (pattern[i][pattern.length - 1 - i] !== color) {
-          win = false
-          break
         }
       }
-      if (win) {
-        return true
-      }
+      return {
+        point: point,
+        result: point ? result : 0,
+      };
     }
-    return false
-  }
-  function clone(data) {
-    return JSON.parse(JSON.stringify(data))
-  }
-  function willWin(pattern, color) {
-    for (let i = 0; i < 3; i++) {
-      for (let l = 0; l < 3; l++) {
-        if (pattern[i][l]) continue
-        let tem = clone(pattern)
-        tem[i][l] = color
-        if (check(tem, color)) {
-          return true
-        }
+    function computerMove(){
+      let selectPoint = bestChoice(pattern, color)
+      if (selectPoint.point) {
+        pattern[selectPoint.point[0]][selectPoint.point[1]] = color
+        color = 3 - color
       }
+      show(pattern);
     }
-  }
-  function move(x, y) {
-    if (pattern[y][x] !== 0) return
-    pattern[y][x] = color
     show(pattern);
-
-    if (check(pattern, color)) {
-      alert(`玩家${color}：赢了`)
-    }
-    if (willWin(pattern, color)) {
-      alert(`玩家${color}：快要赢了`)
-    }
-    color = 3 - color
-  }
-  function show(pattern) {
-    var oBox = document.getElementById('box');
-    oBox.innerHTML = ''
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < pattern.length; i++) {
-      const itemArry = pattern[i];
-      let oWrap = document.createElement('div');
-      oWrap.setAttribute('class', 'item-wrap');
-      for (let j = 0; j < itemArry.length; j++) {
-        const oItem = document.createElement('div');
-        oItem.setAttribute('class', 'item');
-        switch (itemArry[j]) {
-          case 0:
-            oItem.innerHTML = '';
-            break;
-          case 1:
-            oItem.innerHTML = 'x';
-            break;
-          case 2:
-            oItem.innerHTML = 'o';
-            break;
-        }
-        oItem.addEventListener('click', () => {
-          move(j, i)
-        });
-        oWrap.appendChild(oItem);
-      }
-      fragment.appendChild(oWrap);
-    }
-    oBox.appendChild(fragment);
-  }
-
-  show(pattern);
-</script>
-
+  </script>
 </html>
