@@ -35,28 +35,60 @@
       token.value = result[0]
       yield token
     } while (result)
-    yield {type: "EOF"}
+    yield { type: "EOF" }
   }
-  const tokens = tokenize('157 + 263 - 589')
+  let source = []
+  const tokens = tokenize('157 * 263 - 589')
   for (token of tokens) {
     if (token.type !== 'Whitespace' && token.type !== 'LineTerminator') {
-      console.log(token)
+      source.push(token)
     }
 
   }
+  console.log(MultiplicationExpression(source))
+  function Expression(source) {
+    if (source[0].type === 'Number') {
+      MultiplicationExpression(source)
+    }
+  }
+  function AdditiveExpression(source) {
 
-  function Expression(source){
+  }
+  function MultiplicationExpression(source) {
+    if (source[0].type === 'Number') {
+      let node = {
+        type: 'MultiplicationExpression',
+        children: source.shift()
+      }
+      source.unshift(node)
+      return MultiplicationExpression(source)
+    }
+    if (source[0].type === 'MultiplicationExpression' && source.length > 1 && source[1].type === '*') {
+      let node = {
+        type: 'MultiplicationExpression',
+        children: [source.shift(), source.shift(), source.shift()]
+      }
+      source.unshift(node)
+      return MultiplicationExpression(source)
+    }
+    if (source[0].type === 'MultiplicationExpression' && source.length > 1 && source[1].type === '/') {
+      let node = {
+        type: 'MultiplicationExpression',
+        children: [source.shift(), source.shift(), source.shift()]
+      }
+      source.unshift(node)
+      return MultiplicationExpression(source)
+    }
+
+    if (source[0].type === 'MultiplicationExpression') {
+      return source[0]
+    }
+    throw new Error('')
+  }
+  function Expression(source) {
 
   }
-  function AdditiveExpression(source){
-    
-  }
-  function MultipExpression(source){
-    
-  }
-  function Expression(source){
-    
-  }
+
 </script>
 
 </html>
