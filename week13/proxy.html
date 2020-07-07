@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #box {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #333;
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="range" value="0" min="0" max="255" />
+  <input type="range" value="0" min="0" max="255" />
+  <input type="range" value="0" min="0" max="255" />
+  <div id="box"></div>
+</body>
+<script>
+  let handlers = new Map()
+  let usedReactivities = []
+  let reactivities = new Map()
+  function reactive(obj) {
+    if (reactivities.has(obj)) {
+      return reactive(obj.prop)
+    }
+    let proxy = new Proxy(obj, {
+      get(obj, prop) {
+        usedReactivities.push([obj, prop])
+        if (typeof obj[prop] === 'object') {
+          return reactive(obj[prop])
+        }
+        return obj[prop]
+      },
+      set(obj, prop, value) {
+        obj[prop] = value
+        if (handlers.get(obj)) {
+          if (handlers.get(obj).get(prop)) {
+            for (let handler of handlers.get(obj).get(prop)) {
+              handler()
+            }
+          }
+        }
+        return obj[prop]
+      }
+    })
+    reactivities.set(obj, proxy)
+    return proxy
+  }
+  function effect(handler) {
+    usedReactivities = []
+    handler()
+    for (let usedReactive of usedReactivities) {
+      let [obj, prop] = usedReactive
+      if (!handlers.has(obj)) {
+        handlers.set(obj, new Map())
+      }
+      if (!handlers.get(obj).has(prop)) {
+        handlers.get(obj).set(prop, [])
+      }
+      handlers.get(obj).get(prop).push(handler)
+    }
+  }
+
+  let box = document.getElementById('box')
+  let oInput = document.getElementsByTagName('input')
+
+  let rgb = { r: 0, g: 0, b: 0 }
+  let rgbArr = ['r','g','b']
+  let p = reactive(rgb)
+  for (let i = 0;i<oInput.length;i++) {
+    oInput[i].addEventListener('input', (event)=>{
+      p[rgbArr[i]] = event.target.value
+    })
+  }
+
+  effect(()=>{
+    box.style.backgroundColor = `rgb(${p.r},${p.g},${p.b})`
+  })
+</script>
+
+</html>
