@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    #dragBox{
+      transform: translate(50px,50px);
+    }
+  </style>
+</head>
+<body>
+  <div id="dragBox" style="width: 100px;height: 100px;background-color: seagreen;" ></div>
+</body>
+<script>
+  const dragBox = document.getElementById('dragBox')
+  let baseX = 0
+  let baseY = 0
+  dragBox.addEventListener('mousedown',(event)=>{
+    event.preventDefault()
+    let startX = event.clientX
+    let startY = event.clientY
+    let left = dragBox.getBoundingClientRect().left
+    let top = dragBox.getBoundingClientRect().top
+    let move = (event)=>{
+      event.preventDefault()
+      console.log(event.clientX, 'clientX')
+      console.log(startX, 'startX')
+      const x = event.clientX - startX + left
+      const y = event.clientY - startY + top
+      dragBox.style.transform = `translate(${x}px,${y}px)`
+      console.log(event,'move')
+    }
+    let up = (event) => {
+      event.preventDefault()
+      baseX = event.clientX - startX + baseX
+      baseY = event.clientY - startY + baseY
+      document.removeEventListener('mousemove',move)
+      document.removeEventListener('mouseup',move)
+    }
+    document.addEventListener('mousemove',move)
+    document.addEventListener('mouseup',up)
+  })
+</script>
+</html>
