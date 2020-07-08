@@ -9,42 +9,127 @@
       margin: 0;
       padding: 0;
     }
+    body{
+      position: relative;
+    }
     #dragBox{
-      transform: translate(50px,50px);
+      /* position: absolute; */
+      width: 100px;
+      height: 100px;
+      /* left: 0;
+      top: 0; */
+      background-color: seagreen;
+      /* transform: translate(50px,50px); */
+      /* display: inline-block; */
+      float: left;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: cornflowerblue;
+      float: left;
+      overflow: hidden;
+    }
+    .box::after{
+      clear: both;
+    }
+    #container{
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div id="dragBox" style="width: 100px;height: 100px;background-color: seagreen;" ></div>
+  <div id="container">文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文
+    字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字字文字文字文字文字文字<div class="box"></div>文字文字文字文字文字文字文字
+    文字文字文字文字文字文字文字</div>
+  <div id="dragBox"></div>
 </body>
 <script>
   const dragBox = document.getElementById('dragBox')
-  let baseX = 0
-  let baseY = 0
   dragBox.addEventListener('mousedown',(event)=>{
-    event.preventDefault()
     let startX = event.clientX
     let startY = event.clientY
     let left = dragBox.getBoundingClientRect().left
     let top = dragBox.getBoundingClientRect().top
     let move = (event)=>{
-      event.preventDefault()
-      console.log(event.clientX, 'clientX')
-      console.log(startX, 'startX')
-      const x = event.clientX - startX + left
-      const y = event.clientY - startY + top
-      dragBox.style.transform = `translate(${x}px,${y}px)`
-      console.log(event,'move')
+      let range = nearest(event.clientX,event.clientY)
+      console.log(range.getBoundingClientRect().x,range.getBoundingClientRect().y)
+      range.insertNode(dragBox)
+      // const x = event.clientX - startX + left
+      // const y = event.clientY - startY + top
+      // dragBox.style.transform = `translate(${x}px,${y}px)`
     }
     let up = (event) => {
-      event.preventDefault()
-      baseX = event.clientX - startX + baseX
-      baseY = event.clientY - startY + baseY
       document.removeEventListener('mousemove',move)
       document.removeEventListener('mouseup',move)
     }
     document.addEventListener('mousemove',move)
     document.addEventListener('mouseup',up)
   })
+
+
+  let container = document.getElementById('container')
+  let ranges = []
+  for (let i = 0;i< container.childNodes[0].textContent.length;i++) {
+    let range = document.createRange()
+    range.setStart(container.childNodes[0],i)
+    range.setEnd(container.childNodes[0],i)
+    ranges.push(range)
+  }
+  function nearest(x0,y0){
+    let nearestRange = null
+    let distance = Infinity
+    for (let i = 0;i< ranges.length;i++){
+      const {x,y} = ranges[i].getBoundingClientRect()
+      let d = (x0 - x) ** 2 + (y0 - y) ** 2
+      if (d< distance){
+        nearestRange = ranges[i]
+        distance = d
+      }
+    }
+    
+    return nearestRange
+  }
+  document.addEventListener('selectstart',(event)=>{event.preventDefault()})
 </script>
 </html>
