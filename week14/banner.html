@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .carousel {
+      width: 200px;
+      height: 120px;
+      white-space: nowrap;
+      /* overflow: hidden; */
+      margin-top: 100px ;
+      margin-left: 600px ;
+    }
+    .carousel img {
+      width: 200px;
+      height: 120px;
+    }
+  </style>
+  <script>
+  window.onload = function () {
+    class Carousel {
+      constructor (data) {
+        this.root = null
+        this.data = null
+      }
+      render (data){
+        this.data = data
+        this.root = document.getElementById('box')
+        this.root.classList.add('carousel')
+        for (let d of data) {
+          let element = document.createElement('img')
+          element.src = d
+          this.root.appendChild(element)
+        }
+        let position = 0
+        let nextPic =  ()=> {
+          console.log(position, 'position')
+          let nextPosition = (position + 1) % this.data.length
+          console.log(nextPosition)
+          let current = this.root.children[position]
+          let next = this.root.children[nextPosition]
+          current.style.transition = 'ease 0s'
+          next.style.transition = 'ease 0s'
+          
+          current.style.transform = `translateX(${-100 * position}%)`
+          next.style.transform = `translateX(${100 - 100*nextPosition}%)`
+          setTimeout(()=>{
+            current.style.transition = 'ease 1s'
+            next.style.transition = 'ease 1s'
+            current.style.transform = `translateX(${-100 -100 * position}%)`
+            next.style.transform = `translateX(${-100*nextPosition}%)`
+            position = (position + 1) % this.data.length
+            nextPic()
+          },2000)
+        }
+        nextPic()
+      }
+    }
+    let data = ['./img/1.png','./img/2.png','./img/3.png','./img/4.png']
+    let c = new Carousel()
+    c.render(data)
+  }
+  </script>
+</head>
+<body>
+  <section id="box"></section>
+</body>
+</html>
