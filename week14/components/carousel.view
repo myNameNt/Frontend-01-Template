@@ -1,0 +1,10 @@
+<template>
+  <div>{{name}}</div>
+</template><script>
+exports default {
+  el: '#root',
+  data: {
+    name: 'wa ka ka'
+  }
+}
+</script>

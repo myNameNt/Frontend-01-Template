@@ -1,3 +1,6 @@
+
+import {Carousel} from './carousel.view'
+
 function createElement (Cls, attributes, ...children) {
   var o = new Cls({ timer: { time: 1000 } })
   for (let name in attributes) {
@@ -50,4 +53,7 @@ let component = <Parent id="box" class="box" attr="hello" >
   <Child class="item"></Child>
 </Parent>
 component.mountTo(document.body)
-console.log(component, '--component')
+
+// let data = []
+// let carousel = <Carousel data={['','','']}></Carousel>
+// carousel.mountTo(document.body)
