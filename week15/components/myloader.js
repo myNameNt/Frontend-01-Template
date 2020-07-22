@@ -44,5 +44,6 @@ export class Carousel {
   }
 }
   `;
+  console.log(r)
   return r;
 }

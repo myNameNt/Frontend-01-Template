@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #el {
+      width: 100px;
+      height: 100px;
+      background-color: seagreen;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="el"></div>
+</body>
+<script>
+  // import {TimeLine, Animation} from './animation.js'
+  class TimeLine {
+    constructor() {
+      this.animations = []
+      this.startTime = 0
+    }
+    tick() {
+      let t = Date.now() - this.startTime
+      for (let animation of this.animations) {
+        let { object, property, template, start, end, duration, delay, timingFunction } = animation
+        if (t > duration + delay) {
+          continue
+        }
+        object[property] = template(timingFunction(start, end)(t - delay))
+      }
+      requestAnimationFrame(() => this.tick())
+    }
+    start() {
+      this.startTime = Date.now()
+      this.tick()
+    }
+    add(animation) {
+      this.animations.push(animation)
+    }
+  }
+
+  class Animation {
+    constructor(object, property, template, start, end, duration, delay, timingFunction) {
+      this.object = object
+      this.property = property
+      this.template = template
+      this.start = start
+      this.end = end
+      this.duration = duration
+      this.delay = delay | 0
+      this.timingFunction = timingFunction || ((start, end) => {
+        return (t) => start + (t / duration) * (end - start)
+      })
+    }
+  }
+
+
+
+  let el = document.getElementById('el')
+  let tl = new TimeLine
+  console.log(el)
+  tl.add(new Animation(el.style, 'transform', v => {
+    return `translateX(${v}px)`
+  }, 0, 200, 1000))
+  tl.start()
+</script>
+
+</html>
