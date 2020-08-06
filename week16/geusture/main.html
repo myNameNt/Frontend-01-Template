@@ -5,25 +5,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script src="./geusture.js"></script>
-
   <style>
     body {
       min-height: 100vh;
+    }
+
+    #drag {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      background-color: aqua;
+      transform: translate(0, 0);
     }
   </style>
 </head>
 
 <body>
-
+  <div id="drag"></div>
 </body>
+<script src="./geusture.js"></script>
 <script>
   window.addEventListener('contextmenu', (event) => { event.preventDefault() }) // 禁止鼠标右键弹出菜单
   document.addEventListener('selectstart', (event) => { event.preventDefault() })
   document.addEventListener('touchmove', (event) => { event.preventDefault() }, { passive: false })
+  let body = document.body
+  enableGesture(body)
+  let x = 0, y = 0;
 
-  document.body.addEventListener('tap', (data) => {
-    console.log(data)
+  let drag = document.getElementById('drag')
+  document.body.addEventListener('pan', (event) => {
+    const { clientX = 0, startX = 0, clientY = 0, startY = 0 } = event.detail || {}
+
+    drag.style.transform = `translate(${x + clientX - startX}px,${y + clientY - startY}px)`
+  })
+  document.body.addEventListener('panend', (event) => {
+    const { clientX = 0, startX = 0, clientY = 0, startY = 0 } = event.detail || {}
+    x = x + clientX - startX
+    y = y + clientY - startY
   })
 
 </script>

@@ -1,5 +1,5 @@
 
-function enableGesture (body) {
+export function enableGesture (body) {
   let contexts = Object.create(null)
   let MOUSE_SYMBOL = Symbol('mouse')
 
