@@ -5,7 +5,6 @@ export function enableGesture (body) {
 
   // if (document.ontouchstart != null) { 判断是否为移动端 若为移动端不监听下面的方法
     body.addEventListener('mousedown', function (event) {
-      console.log('down')
       contexts[MOUSE_SYMBOL] = Object.create(null)
       start(event, contexts[MOUSE_SYMBOL])
       let mousemove = (event) => {

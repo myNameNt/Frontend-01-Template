@@ -1,30 +1,40 @@
 export class TimeLine {
   constructor() {
-    this.animations = []
+    this.animations = new Set()
+    this.finishedAnimations =new Set()
     this.startTime = 0
+    this.addTimes = new Map()
     this.requestId = null
-    this.state = 'Initialization'
+    this.state = 'initialization'
   }
   tick () {
     let t = Date.now() - this.startTime
-    let animations = this.animations.filter((animation) => !animation.finished)
     for (let animation of this.animations) {
-      let { object, property, template, start, end, duration, delay, startTime, timingFunction } = animation
-
-      let progression = timingFunction((t - delay - startTime) / duration) // 0-1之间的数
-      if (t > duration + delay + startTime) {
-        animation.finished = true
-        progression = 1
+      let { object, property, template, start, end, duration, delay, startTime, timingFunction} = animation
+      let addTime = this.addTimes.get(animation)
+      if (t < delay + addTime) {
+        continue
       }
+
+      let progression = timingFunction((t - delay - addTime) / duration) // 0-1之间的数
+      if (t > duration + delay + addTime) {
+        this.animations.delete(animation)
+        progression = 1
+        this.finishedAnimations.add(animation)
+      }
+
       let value = animation.valueFromProgression(progression)
       object[property] = template(value)
     }
-    if (true || animations.length) {
+
+    if (this.animations.size) {
       this.requestId = requestAnimationFrame(() => this.tick())
+    } else {
+      this.requestId = null
     }
   }
   start () {
-    if (this.state !== 'Initialization') {
+    if (this.state !== 'initialization') {
       return
     }
     this.state = 'playing'
@@ -39,6 +49,7 @@ export class TimeLine {
     this.pauseTime = Date.now()
     if (this.requestId !== null) {
       cancelAnimationFrame(this.requestId)
+      this.requestId = null
     }
   }
   resume () {
@@ -49,30 +60,49 @@ export class TimeLine {
     this.startTime += Date.now() - this.pauseTime
     this.tick()
   }
+  reset () {
+    if (this.state === 'playing') {
+      this.pause()
+    }
+    this.animations = new Set()
+    this.addTimes = new Map()
+    this.finishedAnimations = new Set()
+    this.startTime = 0
+    this.requestId = null
+    this.state = 'initialization'
+    this.pauseTime = null
+    this.tick()
+  }
   restart () {
     if (this.state === 'playing') {
       this.pause()
     }
-    this.animations = []
-    this.startTime = 0
+    for (let animation of this.finishedAnimations) {
+      this.animations.add(animation)
+    }
+    this.finishedAnimations = new Set()
+    this.startTime = Date.now()
     this.requestId = null
-    this.state = 'playing'
+    this.state = 'initialization'
     this.pauseTime = null
     this.tick()
   }
-  add (animation, startTime) {
-    this.animations.push(animation)
+  add (animation, addTime) {
+    this.animations.add(animation)
+    if (this.state === 'playing' && this.requestId === null) {
+      this.tick()
+    }
     if (this.state === 'playing') {
-      animation.startTime = startTime !== void 0 ? startTime : Date.now() - this.startTime
+      this.addTimes.set(animation, addTime !== void 0 ? addTime : Date.now() - this.startTime)
     } else {
-      animation.startTime = startTime !== void 0 ? startTime : 0
+      this.addTimes.set(animation, addTime !== void 0 ? addTime : 0)
     }
 
   }
 }
 
 export class Animation {
-  constructor(object, property, start, end, duration, delay, timingFunction, template) {
+  constructor(object, property, start, end, duration, delay, timingFunction, template,) {
     this.object = object
     this.property = property
     this.template = template
@@ -84,7 +114,6 @@ export class Animation {
       return (t) => start + (t / duration) * (end - start)
     })
     this.finished = false
-    this.startTime = 0
   }
   valueFromProgression (progression) {
     return this.start + progression * (this.end - this.start)
@@ -199,8 +228,8 @@ export function cubicBezier (p1x, p1y, p2x, p2y) {
   return solve;
 }
 
-export const ease = cubicBezier(.25,.1,.25,1)
-export const linear = cubicBezier(0,0,1,1)
+export const ease = cubicBezier(.25, .1, .25, 1)
+export const linear = cubicBezier(0, 0, 1, 1)
 /*
 
 let animation = new Animation(object,property,start,end,duration,delay,timingFunction)
