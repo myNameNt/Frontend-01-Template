@@ -1,5 +1,9 @@
 import { TimeLine, Animation, ease, linear } from './animation'
 import { createElement } from "./createElement";
+import { enableGesture } from './gesture'
+
+import css from './Carousel.css'
+
 export class Carousel {
   constructor() {
     this.root = null
@@ -15,6 +19,7 @@ export class Carousel {
   render () {
     let timeLine = new TimeLine
     timeLine.start()
+    let position = 0
     let nextPicStopHandler = null
 
     let children = this.data.map((url, currentPosition) => {
@@ -28,7 +33,6 @@ export class Carousel {
         let currentElement = children[currentPosition]
         let currentTransformValue = currentElement.style.transform ? Number(currentElement.style.transform.match(/translateX\(([\s\S]+)px\)/)[1]) : 0
         offset = currentTransformValue + 200 * currentPosition
-
       }
 
       let onPan = (event) => {
@@ -41,12 +45,10 @@ export class Carousel {
         let lastTransformValue = -200 - 200 * lastPosition + offset + dx
         let nextTransformValue = 200 - 200 * nextPosition + offset + dx
 
-
         currentElement.style.transform = `translateX(${currentTransformValue}px)`
         lastElement.style.transform = `translateX(${lastTransformValue}px)`
         nextElement.style.transform = `translateX(${nextTransformValue}px)`
       }
-
       let onPanend = (event) => {
         let lastElement = children[lastPosition]
         let currentElement = children[currentPosition]
@@ -54,7 +56,7 @@ export class Carousel {
         let direction = 0
         let dx = event.detail.clientX - event.detail.startX
 
-        console.log(event.detail)
+
         if (dx + offset > 100 || dx > 0 && event.detail.isFlick) {
           direction = 1
         } else if (dx + offset < -100 || dx < 0 && event.detail.isFlick) {
@@ -62,6 +64,7 @@ export class Carousel {
         }
         timeLine.reset()
         timeLine.start()
+
         const lastStart = -200 - 200 * lastPosition + offset + dx
         const currentStart = -200 * currentPosition + offset + dx
         const nextStart = 200 - 200 * nextPosition + offset + dx
@@ -76,6 +79,8 @@ export class Carousel {
         timeLine.add(lastAnimation)
         timeLine.add(currentAnimation)
         timeLine.add(nextAnimation)
+        // position = currentPosition - 1
+        // nextPicStopHandler = setTimeout(nextPic, 3000)
       }
       let element = <img src={url} onStart={() => onStart()} onPan={onPan} onPanend={onPanend} enableGesture={true} />
       element.addEventListener('dragstart', function (event) { event.preventDefault() })
@@ -84,15 +89,15 @@ export class Carousel {
 
 
     let nextPic = () => {
-      let nextPosition = (this.position + 1) % this.data.length
-      let current = children[this.position]
+      let nextPosition = (position + 1) % this.data.length
+      let current = children[position]
       let next = children[nextPosition]
-      let currentAnimation = new Animation(current.style, 'transform', -100 * this.position, -100 - 100 * this.position, 500, 0, linear, v => `translateX(${2 * v}px)`)
+      let currentAnimation = new Animation(current.style, 'transform', -100 * position, -100 - 100 * position, 500, 0, linear, v => `translateX(${2 * v}px)`)
       let nextAnimation = new Animation(next.style, 'transform', 100 - 100 * nextPosition, -100 * nextPosition, 500, 0, linear, v => `translateX(${2 * v}px)`)
       timeLine.add(currentAnimation)
       timeLine.add(nextAnimation)
 
-      this.position = nextPosition
+      position = nextPosition
       nextPicStopHandler = setTimeout(nextPic, 3000)
     }
     nextPicStopHandler = setTimeout(nextPic, 3000)

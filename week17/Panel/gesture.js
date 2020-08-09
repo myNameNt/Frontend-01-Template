@@ -46,6 +46,7 @@ export function enableGesture (body) {
     delete contexts[touch.identifier]
   })
 
+
   let start = (point, context) => {
     body.dispatchEvent(new CustomEvent('start', {
       detail: {
