@@ -13,7 +13,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\week07\\toy-browser\\client.js"
+            "program": "${workspaceFolder}\\week18\\watcher\\watcher.js"
         }
     ]
 }
