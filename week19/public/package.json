@@ -1,0 +1,14 @@
+{
+  "name": "app-name",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha",
+    "coverage": "nyc mocha",
+    "start": "webpack-dev-server",
+    "build": "webpack"
+  },
+  "author": "nieting",
+  "license": "MIT"
+}
