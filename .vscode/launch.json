@@ -13,7 +13,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\week19\\publish\\publish-server\\app.js"
+            "program": "${workspaceFolder}\\week20\\publish\\pbulish-server-vanilla\\index.js"
         }
     ]
 }
